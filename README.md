@@ -22,7 +22,7 @@ PC では左に設定、右に結果、スマホでは上に結果が表示さ�
   |---|---|
   | Noto Sans JP Bold | Noto Sans JP 700 |
   | M+ 1p bold | M PLUS 1p 700 |
-  | Rounded M+ black | M PLUS Rounded 1c 900 |
+  | Rounded M+ extrabold | M PLUS Rounded 1c 800 |
   | Kiwi Maru Medium | Kiwi Maru 500 |
   | Zen Kaku Gothic New Bold | Zen Kaku Gothic New 700 |
   | Yusei Magic | Yusei Magic 400 |

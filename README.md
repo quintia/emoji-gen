@@ -24,7 +24,7 @@ PC では左に設定、右に結果、スマホでは上に結果が表示さ�
   | M+ 1p black | M PLUS 1p 900 |
   | Rounded M+ black | M PLUS Rounded 1c 900 |
   | Kiwi Maru Medium | Kiwi Maru 500 |
-  | Zen Kaku Gothic New Black | Zen Kaku Gothic New 900 |
+  | Zen Kaku Gothic New Bold | Zen Kaku Gothic New 700 |
   | Yusei Magic | Yusei Magic 400 |
 - **色**: 2 段のプリセットパレットと、任意の色を選べるカラーピッカーがあります。背景は常に透過です。
   - 1 段目: ライト・ダークどちらの背景でもコントラスト比 3:1 以上の中間色

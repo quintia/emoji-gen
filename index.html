@@ -6,7 +6,7 @@
 <title>絵文字ジェネレーター（ローカル生成）</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=M+PLUS+1p:wght@900&family=M+PLUS+Rounded+1c:wght@900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=M+PLUS+1p:wght@900&family=M+PLUS+Rounded+1c:wght@900&family=Kiwi+Maru:wght@500&family=Zen+Kaku+Gothic+New:wght@900&family=Yusei+Magic&display=swap" rel="stylesheet">
 <style>
   :root { --accent: #E0457F; --border: #ddd; }
   * { box-sizing: border-box; }
@@ -128,11 +128,14 @@
 <script>
 const SIZE = 128;
 
-// The original site's top three Japanese fonts, substituted with the closest Google Fonts.
+// The original site's top three Japanese fonts (substituted with the closest Google Fonts), plus extras.
 const FONTS = [
   { key: 'notosans', name: 'Noto Sans JP Bold', css: '700 {px}px "Noto Sans JP"' },
   { key: 'mplus-1p', name: 'M+ 1p black', css: '900 {px}px "M PLUS 1p"' },
   { key: 'rounded-mplus', name: 'Rounded M+ black', css: '900 {px}px "M PLUS Rounded 1c"' },
+  { key: 'kiwi-maru', name: 'Kiwi Maru Medium', css: '500 {px}px "Kiwi Maru"' },
+  { key: 'zen-kaku', name: 'Zen Kaku Gothic New Black', css: '900 {px}px "Zen Kaku Gothic New"' },
+  { key: 'yusei-magic', name: 'Yusei Magic', css: '400 {px}px "Yusei Magic"' },
 ];
 
 // Row 1: mid-tones with >= 3:1 contrast against both the light (#fff) and dark (#1a1d21) previews.

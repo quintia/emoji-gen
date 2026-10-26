@@ -8,87 +8,114 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&family=M+PLUS+1p:wght@900&family=M+PLUS+Rounded+1c:wght@900&display=swap" rel="stylesheet">
 <style>
-  body { font-family: sans-serif; max-width: 640px; margin: 24px auto; padding: 0 16px; color: #333; }
-  h1 { font-size: 20px; }
-  fieldset { border: 1px solid #ddd; border-radius: 6px; margin: 0 0 16px; padding: 8px 12px 12px; }
-  legend { font-weight: bold; font-size: 14px; }
-  textarea { width: 100%; box-sizing: border-box; font-size: 18px; padding: 8px; }
-  label { margin-right: 16px; white-space: nowrap; }
+  :root { --accent: #E0457F; --border: #ddd; }
+  * { box-sizing: border-box; }
+  body { font-family: sans-serif; max-width: 960px; margin: 0 auto; padding: 0 16px 24px; color: #333; }
+  h1 { font-size: 20px; margin: 24px 0 16px; }
+
+  /* Mobile: result pinned on top, controls below. Desktop: controls left, result pinned right. */
+  .layout { display: flex; flex-direction: column; gap: 16px; }
+  .result {
+    order: -1; position: sticky; top: 0; z-index: 1;
+    background: #fff; padding: 8px 0; border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 760px) {
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 32px; align-items: start; }
+    .result { order: 0; top: 16px; padding: 0; border-bottom: none; }
+  }
+
+  .field { margin-bottom: 18px; }
+  .field-label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 6px; color: #555; }
+  textarea { width: 100%; font-size: 18px; padding: 8px; border: 1px solid #bbb; border-radius: 6px; resize: vertical; }
+  .options { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .options label { white-space: nowrap; }
+
   .palette { display: flex; flex-direction: column; gap: 8px; }
   .palette-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .swatch { width: 28px; height: 28px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; padding: 0; }
-  .swatch.selected { outline: 3px solid #333; outline-offset: 1px; }
-  input[type=color] { width: 36px; height: 30px; padding: 0; border: none; background: none; cursor: pointer; }
-  button#generate { font-size: 18px; padding: 10px 32px; border: none; border-radius: 6px; background: #EC71A1; color: #fff; cursor: pointer; }
-  #result { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
-  .images { display: flex; gap: 12px; flex-wrap: wrap; }
-  #result[hidden] { display: none; }
+  .swatch.selected, .custom.selected input { outline: 3px solid #333; outline-offset: 1px; }
+  .custom { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; cursor: pointer; margin-left: 8px; }
+  .custom input { width: 28px; height: 28px; padding: 0; border: 1px solid #ccc; border-radius: 4px; background: none; cursor: pointer; }
+  .custom input::-webkit-color-swatch-wrapper { padding: 0; }
+  .custom input::-webkit-color-swatch { border: none; border-radius: 3px; }
+
+  .images { display: flex; gap: 8px; align-items: flex-start; }
+  .checker {
+    flex: none; line-height: 0;
+    background: repeating-conic-gradient(#e6e6e6 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
+    border: 1px solid var(--border);
+  }
+  #output { width: 128px; height: 128px; }
+  .previews { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   /* Sizes mimic Slack: 22px inline in a message, 16px in a reaction. */
-  .preview { border: 1px solid #ddd; padding: 12px 16px; font-size: 15px; }
-  .preview p { margin: 0 0 8px; }
+  .preview { border: 1px solid var(--border); padding: 6px 10px; font-size: 14px; white-space: nowrap; }
+  .preview p { margin: 0 0 4px; }
   .preview img { width: 16px; height: 16px; vertical-align: middle; }
   .preview img.inline { width: 22px; height: 22px; }
-  .reaction { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+  .reaction { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 12px; }
   .preview.light { background: #fff; color: #1d1c1d; }
   .preview.light .reaction { background: #e8f5fa; border: 1px solid #1d9bd1; color: #1264a3; }
   .preview.dark { background: #1a1d21; color: #d1d2d3; }
   .preview.dark .reaction { background: #1b3a4b; border: 1px solid #1d9bd1; color: #e8e8e8; }
-  .save { display: flex; gap: 6px; align-items: center; }
-  .save label { margin-right: 0; }
-  .save input { width: 160px; font-size: 14px; padding: 4px 6px; }
-  .save button { font-size: 14px; padding: 4px 12px; cursor: pointer; }
-  .checker {
-    line-height: 0;
-    background: repeating-conic-gradient(#e6e6e6 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
-    border: 1px solid #ddd;
-  }
+
+  .save { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+  .save label { font-size: 14px; white-space: nowrap; }
+  .save input { flex: 1; min-width: 0; font-size: 14px; padding: 5px 8px; border: 1px solid #bbb; border-radius: 4px; }
+  .save button { font-size: 14px; padding: 5px 16px; border: none; border-radius: 4px; background: var(--accent); color: #fff; cursor: pointer; }
+  .save button:disabled { background: #ccc; cursor: default; }
 </style>
 </head>
 <body>
 <h1>絵文字にしたい文字を入力してください！</h1>
 
-<fieldset>
-  <legend>テキスト</legend>
-  <textarea id="text" rows="3">絵文
+<div class="layout">
+  <div class="controls">
+    <div class="field">
+      <label class="field-label" for="text">テキスト</label>
+      <textarea id="text" rows="3">絵文
 字。</textarea>
-</fieldset>
-
-<fieldset>
-  <legend>文字揃え</legend>
-  <label><input type="radio" name="align" value="left"> 左揃え</label>
-  <label><input type="radio" name="align" value="center" checked> 中央揃え</label>
-  <label><input type="radio" name="align" value="right"> 右揃え</label>
-  <div><label><input type="checkbox" id="uniform-width"> 文字幅を最小の段に揃える</label></div>
-</fieldset>
-
-<fieldset>
-  <legend>フォント</legend>
-  <div id="fonts"></div>
-</fieldset>
-
-<fieldset>
-  <legend>色</legend>
-  <div class="palette" id="palette"></div>
-</fieldset>
-
-<button id="generate">生成する</button>
-
-<div id="result" hidden>
-  <div class="images">
-    <div class="checker"><img id="output" width="128" height="128" alt=""></div>
-    <div class="preview light">
-      <p>メッセージ <img class="preview-img inline" alt=""> です</p>
-      <span class="reaction"><img class="preview-img" alt=""> 1</span>
     </div>
-    <div class="preview dark">
-      <p>メッセージ <img class="preview-img inline" alt=""> です</p>
-      <span class="reaction"><img class="preview-img" alt=""> 1</span>
+
+    <div class="field">
+      <span class="field-label">文字揃え</span>
+      <div class="options">
+        <label><input type="radio" name="align" value="left"> 左揃え</label>
+        <label><input type="radio" name="align" value="center" checked> 中央揃え</label>
+        <label><input type="radio" name="align" value="right"> 右揃え</label>
+        <label><input type="checkbox" id="uniform-width"> 文字幅を最小の段に揃える</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">フォント</span>
+      <div class="options" id="fonts"></div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">色</span>
+      <div class="palette" id="palette"></div>
     </div>
   </div>
-  <div class="save">
-    <label for="name">ダウンロード:</label>
-    <input id="name" type="text">
-    <button id="save">保存</button>
+
+  <div class="result">
+    <div class="images">
+      <div class="checker"><img id="output" alt=""></div>
+      <div class="previews">
+        <div class="preview light">
+          <p>メッセージ <img class="preview-img inline" alt=""> です</p>
+          <span class="reaction"><img class="preview-img" alt=""> 1</span>
+        </div>
+        <div class="preview dark">
+          <p>メッセージ <img class="preview-img inline" alt=""> です</p>
+          <span class="reaction"><img class="preview-img" alt=""> 1</span>
+        </div>
+      </div>
+    </div>
+    <form class="save" id="save-form">
+      <label for="name">ダウンロード:</label>
+      <input id="name" type="text">
+      <button id="save">保存</button>
+    </form>
   </div>
 </div>
 
@@ -111,6 +138,11 @@ const PALETTE = [
 
 let color = '#E0457F';
 
+const textEl = document.getElementById('text');
+const nameEl = document.getElementById('name');
+const outputEl = document.getElementById('output');
+const saveEl = document.getElementById('save');
+
 const fontsEl = document.getElementById('fonts');
 FONTS.forEach((f, i) => {
   const label = document.createElement('label');
@@ -119,16 +151,23 @@ FONTS.forEach((f, i) => {
 });
 
 const paletteEl = document.getElementById('palette');
-const picker = document.createElement('input');
-picker.type = 'color';
-picker.value = color;
-picker.title = 'カスタム';
+const custom = document.createElement('label');
+custom.className = 'custom';
+custom.innerHTML = '<input type="color"> カスタム';
+const picker = custom.querySelector('input');
 picker.addEventListener('input', () => selectColor(picker.value));
 
 function selectColor(c) {
   color = c.toUpperCase();
   picker.value = color.toLowerCase();
-  paletteEl.querySelectorAll('.swatch').forEach(s => s.classList.toggle('selected', s.dataset.color === color));
+  let inPalette = false;
+  paletteEl.querySelectorAll('.swatch').forEach(s => {
+    const selected = s.dataset.color === color;
+    s.classList.toggle('selected', selected);
+    inPalette ||= selected;
+  });
+  custom.classList.toggle('selected', !inPalette);
+  update();
 }
 
 PALETTE.forEach((colors, i) => {
@@ -143,10 +182,9 @@ PALETTE.forEach((colors, i) => {
     b.addEventListener('click', () => selectColor(c));
     row.appendChild(b);
   });
-  if (i === 0) row.appendChild(picker);
+  if (i === 0) row.appendChild(custom);
   paletteEl.appendChild(row);
 });
-selectColor(color);
 
 // Each line gets an equal share of the height and is scaled so its ink fills it vertically.
 // Lines that would overflow the width are squeezed horizontally; narrower lines are aligned.
@@ -200,30 +238,49 @@ function suggestName(text) {
   return name || 'emoji';
 }
 
-document.getElementById('generate').addEventListener('click', async () => {
-  const text = document.getElementById('text').value.replace(/\r/g, '');
-  if (!text.trim()) return;
+// Once the file name is edited by hand it is no longer overwritten,
+// until either the name field or the text is cleared.
+let nameEdited = false;
+nameEl.addEventListener('input', () => { nameEdited = nameEl.value.trim() !== ''; });
+
+// Redraw on every change. Font loading is async, so a stale result is discarded.
+let renderId = 0;
+async function update() {
+  const id = ++renderId;
+  const text = textEl.value.replace(/\r/g, '');
   const font = FONTS.find(f => f.key === document.querySelector('input[name=font]:checked').value);
   const align = document.querySelector('input[name=align]:checked').value;
+  const uniformWidth = document.getElementById('uniform-width').checked;
+
+  if (!text.trim()) nameEdited = false;
+  if (!nameEdited) nameEl.value = text.trim() ? suggestName(text) : '';
+  saveEl.disabled = !text.trim();
 
   // Google Fonts are split into unicode-range subsets, so load the ones this text needs.
-  await document.fonts.load(font.css.replace('{px}', 200), text);
+  if (text.trim()) await document.fonts.load(font.css.replace('{px}', 200), text);
+  if (id !== renderId) return;
 
-  const uniformWidth = document.getElementById('uniform-width').checked;
   const src = render(text, font, align, color, uniformWidth);
-  document.getElementById('output').src = src;
+  outputEl.src = src;
   document.querySelectorAll('.preview-img').forEach(img => img.src = src);
-  document.getElementById('name').value = suggestName(text);
-  document.getElementById('result').hidden = false;
+}
+
+textEl.addEventListener('input', update);
+document.querySelector('.controls').addEventListener('change', e => {
+  if (e.target.type === 'radio' || e.target.type === 'checkbox') update();
 });
 
-document.getElementById('save').addEventListener('click', () => {
-  const name = document.getElementById('name').value.trim().replace(/\.png$/i, '') || 'emoji';
+document.getElementById('save-form').addEventListener('submit', e => {
+  e.preventDefault();
+  if (saveEl.disabled) return;
+  const name = nameEl.value.trim().replace(/\.png$/i, '') || 'emoji';
   const a = document.createElement('a');
-  a.href = document.getElementById('output').src;
+  a.href = outputEl.src;
   a.download = name + '.png';
   a.click();
 });
+
+selectColor(color);
 </script>
 </body>
 </html>

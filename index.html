@@ -11,7 +11,7 @@
   :root { --accent: #E0457F; --border: #ddd; }
   * { box-sizing: border-box; }
   body { font-family: sans-serif; margin: 0; color: #333; }
-  .header { background: var(--accent); color: #fff; margin-bottom: 20px; }
+  .header { background: #f6f6f7; color: #333; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
   .header h1, .layout { max-width: 960px; margin-left: auto; margin-right: auto; padding-left: 16px; padding-right: 16px; }
   .header h1 { font-size: 18px; margin-top: 0; margin-bottom: 0; padding-top: 14px; padding-bottom: 14px; }
   .layout { padding-bottom: 24px; }
@@ -88,7 +88,7 @@
         <label><input type="radio" name="align" value="right"> 右揃え</label>
       </div>
       <div class="options">
-        <label><input type="checkbox" id="uniform-width"> 文字幅を最小の段に揃える</label>
+        <label><input type="checkbox" id="uniform-width" checked> 文字幅を最小の段に揃える</label>
       </div>
     </div>
 
@@ -142,7 +142,7 @@ const PALETTE = [
   ['#68B7C7', '#64BBA0', '#EC8FB2', '#E49D4C', '#94A8F9', '#6FBC77', '#F68F8F', '#C29BEC'],
 ];
 
-let color = '#E0457F';
+let color = PALETTE[0][0];
 
 const textEl = document.getElementById('text');
 const nameEl = document.getElementById('name');

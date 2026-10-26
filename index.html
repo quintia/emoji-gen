@@ -20,7 +20,8 @@
   .swatch.selected { outline: 3px solid #333; outline-offset: 1px; }
   input[type=color] { width: 36px; height: 30px; padding: 0; border: none; background: none; cursor: pointer; }
   button#generate { font-size: 18px; padding: 10px 32px; border: none; border-radius: 6px; background: #EC71A1; color: #fff; cursor: pointer; }
-  #result { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+  #result { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+  .images { display: flex; gap: 12px; flex-wrap: wrap; }
   #result[hidden] { display: none; }
   /* Sizes mimic Slack: 22px inline in a message, 16px in a reaction. */
   .preview { border: 1px solid #ddd; padding: 12px 16px; font-size: 15px; }
@@ -32,7 +33,6 @@
   .preview.light .reaction { background: #e8f5fa; border: 1px solid #1d9bd1; color: #1264a3; }
   .preview.dark { background: #1a1d21; color: #d1d2d3; }
   .preview.dark .reaction { background: #1b3a4b; border: 1px solid #1d9bd1; color: #e8e8e8; }
-  .main { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
   .save { display: flex; gap: 6px; }
   .save input { width: 160px; font-size: 14px; padding: 4px 6px; }
   .save button { font-size: 14px; padding: 4px 12px; cursor: pointer; }
@@ -73,20 +73,20 @@
 <button id="generate">生成する♪</button>
 
 <div id="result" hidden>
-  <div class="main">
+  <div class="images">
     <div class="checker"><img id="output" width="128" height="128" alt=""></div>
-    <div class="save">
-      <input id="name" type="text" aria-label="ファイル名">
-      <button id="save">保存</button>
+    <div class="preview light">
+      <p>メッセージ <img class="preview-img inline" alt=""> です</p>
+      <span class="reaction"><img class="preview-img" alt=""> 1</span>
+    </div>
+    <div class="preview dark">
+      <p>メッセージ <img class="preview-img inline" alt=""> です</p>
+      <span class="reaction"><img class="preview-img" alt=""> 1</span>
     </div>
   </div>
-  <div class="preview light">
-    <p>メッセージ <img class="preview-img inline" alt=""> です</p>
-    <span class="reaction"><img class="preview-img" alt=""> 1</span>
-  </div>
-  <div class="preview dark">
-    <p>メッセージ <img class="preview-img inline" alt=""> です</p>
-    <span class="reaction"><img class="preview-img" alt=""> 1</span>
+  <div class="save">
+    <input id="name" type="text" aria-label="ファイル名">
+    <button id="save">保存</button>
   </div>
 </div>
 

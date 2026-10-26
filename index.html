@@ -10,8 +10,11 @@
 <style>
   :root { --accent: #E0457F; --border: #ddd; }
   * { box-sizing: border-box; }
-  body { font-family: sans-serif; max-width: 960px; margin: 0 auto; padding: 0 16px 24px; color: #333; }
-  h1 { font-size: 20px; margin: 24px 0 16px; }
+  body { font-family: sans-serif; margin: 0; color: #333; }
+  .header { background: var(--accent); color: #fff; margin-bottom: 20px; }
+  .header h1, .layout { max-width: 960px; margin-left: auto; margin-right: auto; padding-left: 16px; padding-right: 16px; }
+  .header h1 { font-size: 18px; margin-top: 0; margin-bottom: 0; padding-top: 14px; padding-bottom: 14px; }
+  .layout { padding-bottom: 24px; }
 
   /* Mobile: result pinned on top, controls below. Desktop: controls left, result pinned right. */
   .layout { display: flex; flex-direction: column; gap: 16px; }
@@ -67,7 +70,7 @@
 </style>
 </head>
 <body>
-<h1>絵文字ジェネレーター（ローカル生成）</h1>
+<header class="header"><h1>絵文字ジェネレーター（ローカル生成）</h1></header>
 
 <div class="layout">
   <div class="controls">

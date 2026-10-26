@@ -21,7 +21,7 @@ PC では左に設定、右に結果、スマホでは上に結果が表示さ�
   | 表示名 | Google Fonts |
   |---|---|
   | Noto Sans JP Bold | Noto Sans JP 700 |
-  | M+ 1p black | M PLUS 1p 900 |
+  | M+ 1p bold | M PLUS 1p 700 |
   | Rounded M+ black | M PLUS Rounded 1c 900 |
   | Kiwi Maru Medium | Kiwi Maru 500 |
   | Zen Kaku Gothic New Bold | Zen Kaku Gothic New 700 |

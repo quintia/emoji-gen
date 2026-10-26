@@ -32,6 +32,10 @@
   .preview.light .reaction { background: #e8f5fa; border: 1px solid #1d9bd1; color: #1264a3; }
   .preview.dark { background: #1a1d21; color: #d1d2d3; }
   .preview.dark .reaction { background: #1b3a4b; border: 1px solid #1d9bd1; color: #e8e8e8; }
+  .main { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .save { display: flex; gap: 6px; }
+  .save input { width: 160px; font-size: 14px; padding: 4px 6px; }
+  .save button { font-size: 14px; padding: 4px 12px; cursor: pointer; }
   .checker {
     line-height: 0;
     background: repeating-conic-gradient(#e6e6e6 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
@@ -69,7 +73,13 @@
 <button id="generate">生成する♪</button>
 
 <div id="result" hidden>
-  <div class="checker"><img id="output" width="128" height="128" alt=""></div>
+  <div class="main">
+    <div class="checker"><img id="output" width="128" height="128" alt=""></div>
+    <div class="save">
+      <input id="name" type="text" aria-label="ファイル名">
+      <button id="save">保存</button>
+    </div>
+  </div>
   <div class="preview light">
     <p>メッセージ <img class="preview-img inline" alt=""> です</p>
     <span class="reaction"><img class="preview-img" alt=""> 1</span>
@@ -178,6 +188,16 @@ function render(text, font, align, fill, uniformWidth) {
   return canvas.toDataURL('image/png');
 }
 
+// Lines joined with "-", e.g. "絵\n文字" -> "絵-文字". Characters invalid in file names are dropped.
+function suggestName(text) {
+  const name = text.split('\n')
+    .map(line => line.trim().replace(/\s+/g, '-'))
+    .filter(Boolean)
+    .join('-')
+    .replace(/[\\/:*?"<>|]/g, '');
+  return name || 'emoji';
+}
+
 document.getElementById('generate').addEventListener('click', async () => {
   const text = document.getElementById('text').value.replace(/\r/g, '');
   if (!text.trim()) return;
@@ -191,7 +211,16 @@ document.getElementById('generate').addEventListener('click', async () => {
   const src = render(text, font, align, color, uniformWidth);
   document.getElementById('output').src = src;
   document.querySelectorAll('.preview-img').forEach(img => img.src = src);
+  document.getElementById('name').value = suggestName(text);
   document.getElementById('result').hidden = false;
+});
+
+document.getElementById('save').addEventListener('click', () => {
+  const name = document.getElementById('name').value.trim().replace(/\.png$/i, '') || 'emoji';
+  const a = document.createElement('a');
+  a.href = document.getElementById('output').src;
+  a.download = name + '.png';
+  a.click();
 });
 </script>
 </body>
